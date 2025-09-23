@@ -1,8 +1,15 @@
+# May 2025
+# R script to read in the ONS quarterly deflators series using the ONS CPI quarterly inflation series to use for the generation of the real salaries series for
+# GLMS. This then reflects the impact on salaries due to inflation, based on a baseline of 2007 at the start of the GLMS series.
+
+
 # Apply deflators
 
-#Read in deflators
+# Deflators downloaded from: https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l522/mm23
+
+# Read in deflators
 # Note: need to wrap in as.data.frame, because otherwise read_xlsx reads in a tibble, which does not function with the subsequent code
-deflators <- as.data.frame(read_xlsx('W:/HE-ALTERNATIVE-PROVIDERS/GLMS/GLMS_2022_Inflation/Deflators/CPIH - May 2023.xlsx',
+deflators <- as.data.frame(read_xlsx(data_folder/"CPIH - March 2025.xlsx",
                        sheet = 1,
                        skip = 8,
                        col_names=FALSE))
@@ -11,11 +18,12 @@ deflators <- as.data.frame(read_xlsx('W:/HE-ALTERNATIVE-PROVIDERS/GLMS/GLMS_2022
 names(deflators) <- c('period', 'deflator2015')
 
 # Calculate 2007 deflators based on value of full year 2007
+# Note: May decide that this needs to be changed for 2023
 deflators$deflator2007 <- deflators$deflator2015 * 100 / deflators$deflator2015[deflators$period =="2007"]
 
-# keep only those for quarters from 2007 to 2022 (as only these are needed for GLMS analysis)
-deflators <- tail(deflators, -111)
-deflators <- head(deflators, 64)
+# keep only those for quarters from 2007 to 2024 (as only these are needed for GLMS analysis)
+deflators <- tail(deflators, -113)
+deflators <- head(deflators, 72)
 
 
 # Apply deflators to create new variable
@@ -100,6 +108,12 @@ Q2_2022$GRSSWK_real <- Q2_2022$GRSSWK * 100 / deflators[62,3]
 Q3_2022$GRSSWK_real <- Q3_2022$GRSSWK * 100 / deflators[63,3]
 Q4_2022$GRSSWK_real <- Q4_2022$GRSSWK * 100 / deflators[64,3]
 
+Q1_2023$GRSSWK_real <- Q1_2023$GRSSWK * 100 / deflators[65,3]
+Q2_2023$GRSSWK_real <- Q2_2023$GRSSWK * 100 / deflators[66,3]
+Q3_2023$GRSSWK_real <- Q3_2023$GRSSWK * 100 / deflators[67,3]
+Q4_2023$GRSSWK_real <- Q4_2023$GRSSWK * 100 / deflators[68,3]
 
-
-
+Q1_2024$GRSSWK_real <- Q1_2024$GRSSWK * 100 / deflators[69,3]
+Q2_2024$GRSSWK_real <- Q2_2024$GRSSWK * 100 / deflators[70,3]
+Q3_2024$GRSSWK_real <- Q3_2024$GRSSWK * 100 / deflators[71,3]
+Q4_2024$GRSSWK_real <- Q4_2024$GRSSWK * 100 / deflators[72,3]
